@@ -1,0 +1,21 @@
+# Private business files belong only in the private repo. These patterns stop them being committed here by accident.
+research/
+customer-kits-ui/internal*
+customer-kits-ui/app.js
+customer-kits-ui/legacy-index.html
+customer-kits-ui/styles.css
+customer-kits-ui/sales-model.mjs
+customer-kits-ui/shared.js
+customer-kits-ui/invoice*
+customer-kits-ui/data.test.mjs
+customer-kits-ui/preview.png
+customer-kits-ui/deploy/
+customer-kits-ui/start.ps1
+*HANDOFF*.md
+AGENTS.md
+CLAUDE.md
+.secrets/
+.env
+.env.*
+node_modules/
+*.log
