@@ -1,0 +1,19 @@
+---
+import SiteLayout from '../../components/SiteLayout.astro';
+import { services } from '../../../services.mjs';
+const title = 'Integration Services | UniFi, Automation, AV & Networks';
+const description = 'Explore Signal Vector Labs services: home and business automation, UniFi access and camera integration, AV and lighting, business networks, software integrations and custom workflows.';
+const iconFor = (icon) => ({ home: '⌂', access: '◉', av: '◖', network: '⌁', business: '▦', automation: '↗' })[icon] || '◇';
+---
+<SiteLayout title={title} description={description} path="/services">
+  <main id="main">
+    <section class="page-hero"><div class="page-wrap"><p class="eyebrow">WHAT WE DESIGN AND CONNECT</p><h1>Integration that starts with the way you use your space.</h1><p>Explore the services below, then combine the pieces around a real project. We bring UniFi, networks, entry, cameras, AV, lighting, business systems and custom automation into one design conversation.</p><div class="mt-6 flex flex-wrap gap-3 text-sm font-semibold text-slate-600"><span class="rounded-full border border-slate-300 bg-white px-3 py-1.5">Homes</span><span class="rounded-full border border-slate-300 bg-white px-3 py-1.5">Offices</span><span class="rounded-full border border-slate-300 bg-white px-3 py-1.5">Retail & hospitality</span><span class="rounded-full border border-slate-300 bg-white px-3 py-1.5">Larger sites</span></div></div></section>
+    <section class="page-wrap section-pad">
+      <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">{services.map((service) => <a class="solution-card" href={`/services/${service.slug}`}>
+        <div class="card-top"><span class="system-icon text-xl" aria-hidden="true">{iconFor(service.icon)}</span><span class="audience">{service.audience.map((item) => item === 'home' ? 'Home' : 'Business').join(' + ')}</span></div><h2 class="mt-4 text-xl font-bold tracking-tight">{service.serviceName}</h2><p>{service.description}</p><span class="card-link">Explore details <span aria-hidden="true">→</span></span>
+      </a>)}</div>
+      <div class="mt-12 rounded-xl border border-blue-100 bg-blue-50/70 p-6 md:p-8"><p class="eyebrow">HOW A PROJECT FITS TOGETHER</p><h2 class="mt-2 max-w-3xl text-2xl font-bold">The network is the foundation. Your integrations and automation shape the experience.</h2><p class="mt-3 max-w-3xl text-slate-600">We review device compatibility, available controls, business-system interfaces and site requirements before agreeing on project scope and implementation.</p></div>
+    </section>
+    <section class="page-wrap pb-20"><div class="cta-panel"><div><p class="eyebrow">HAVE A SPECIFIC IDEA?</p><h2>We can work from the outcome you have in mind.</h2><p>Tell us what should happen, when it should happen and which systems are involved. We’ll map the questions together.</p></div><a class="btn btn-primary shrink-0" href="/plan">Build a walkthrough brief →</a></div></section>
+  </main>
+</SiteLayout>

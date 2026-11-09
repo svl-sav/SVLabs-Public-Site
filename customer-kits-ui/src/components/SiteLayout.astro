@@ -1,0 +1,108 @@
+---
+import '../styles/global.css';
+import config from '../../site-config.json';
+import { companySummary, services } from '../../services.mjs';
+
+interface Props {
+  title: string;
+  description: string;
+  path: string;
+  service?: typeof services[number];
+}
+const { title, description, path, service } = Astro.props;
+const origin = config.siteUrl.replace(/\/$/, '');
+const canonical = origin ? `${origin}${path}` : undefined;
+const phoneDigits = config.telephone.replace(/\D/g, '').replace(/^1(?=\d{10}$)/, '');
+const phoneDisplay = phoneDigits.length === 10 ? `${phoneDigits.slice(0, 3)}-${phoneDigits.slice(3, 6)}-${phoneDigits.slice(6)}` : config.telephone;
+const area = config.serviceAreas?.length ? { areaServed: config.serviceAreas.map((name: string) => ({ '@type': 'Place', name })) } : {};
+const organization = {
+  '@type': 'Organization', '@id': `${origin}/#organization`, name: config.businessName,
+  description: companySummary, url: origin, email: config.email, telephone: config.telephone,
+  ...area, hasOfferCatalog: { '@id': `${origin}/services/#catalog` },
+};
+const graph: Record<string, any>[] = [organization, {
+  '@type': 'WebSite', '@id': `${origin}/#website`, name: config.businessName,
+  url: `${origin}/`, publisher: { '@id': `${origin}/#organization` },
+}];
+if (service) {
+  const entity = {
+    '@type': 'Service', '@id': `${origin}/services/${service.slug}/#service`,
+    name: service.serviceName, description: service.description,
+    serviceType: service.serviceName, provider: { '@id': `${origin}/#organization` },
+    audience: { '@type': 'Audience', audienceType: service.whoFor }, ...area,
+    url: `${origin}/services/${service.slug}/`,
+  };
+  graph.push(entity);
+  graph.push({ '@type': 'WebPage', '@id': `${canonical}#webpage`, name: title, description, url: canonical, isPartOf: { '@id': `${origin}/#website` }, mainEntity: { '@id': entity['@id'] } });
+} else {
+  graph.push({ '@type': path === '/services' ? 'CollectionPage' : 'WebPage', '@id': `${canonical}#webpage`, name: title, description, url: canonical, isPartOf: { '@id': `${origin}/#website` } });
+  if (path === '/' || path === '/services') {
+    const catalog = { '@type': 'OfferCatalog', '@id': `${origin}/services/#catalog`, name: 'Home and business integration services', itemListElement: services.map((item) => ({ '@type': 'Offer', itemOffered: { '@type': 'Service', name: item.serviceName, description: item.description, provider: { '@id': `${origin}/#organization` }, ...area } })) };
+    graph.push(catalog);
+  }
+}
+if (path !== '/') {
+  const crumbs = [{ name: 'Home', item: `${origin}/` }];
+  if (service) crumbs.push({ name: 'Services', item: `${origin}/services/` });
+  crumbs.push({ name: service?.title ?? (path === '/plan' ? 'Plan a walkthrough' : path === '/services' ? 'Services' : title), item: canonical ?? path });
+  graph.push({ '@type': 'BreadcrumbList', itemListElement: crumbs.map((crumb, index) => ({ '@type': 'ListItem', position: index + 1, ...crumb })) });
+}
+const safeJson = JSON.stringify({ '@context': 'https://schema.org', '@graph': graph }).replace(/</g, '\\u003c');
+const navItems = [{ href: '/services', label: 'Solutions' }, { href: '/#approach', label: 'How we work' }, { href: '/#experience', label: 'See it in action' }];
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#10213a" />
+    <title>{title} | Signal Vector Labs</title>
+    <meta name="description" content={description} />
+    <meta name="robots" content="index,follow,max-image-preview:large" />
+    {canonical && <link rel="canonical" href={canonical} />}
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Signal Vector Labs" />
+    <meta property="og:title" content={`${title} | Signal Vector Labs`} />
+    <meta property="og:description" content={description} />
+    {canonical && <meta property="og:url" content={canonical} />}
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <script type="application/ld+json" set:html={safeJson} />
+    <slot name="head" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="site-header">
+      <div class="page-wrap header-inner">
+        <a class="brand-lockup" href="/" aria-label="Signal Vector Labs home">
+          <span class="sv-mark" aria-hidden="true">SV</span><span>Signal Vector Labs<small>CONNECTED SYSTEMS, DESIGNED</small></span>
+        </a>
+        <nav class="nav-links" aria-label="Main navigation">
+          {navItems.map((item) => <a href={item.href} aria-current={(path === item.href || (item.href === '/services' && path.startsWith('/services'))) ? 'page' : undefined}>{item.label}</a>)}
+          <a class="btn btn-primary" href="/plan">Plan a walkthrough <span aria-hidden="true">→</span></a>
+        </nav>
+        <details class="mobile-nav">
+          <summary aria-label="Open navigation menu">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" /></svg>
+          </summary>
+          <nav class="mobile-menu" aria-label="Mobile navigation">
+            {navItems.map((item) => <a href={item.href}>{item.label}</a>)}
+            <a class="btn btn-primary" href="/plan">Plan a walkthrough <span aria-hidden="true">→</span></a>
+          </nav>
+        </details>
+      </div>
+    </header>
+    <slot />
+    <footer class="site-footer">
+      <div class="page-wrap footer-main">
+        <div>
+          <a class="brand-lockup" href="/" aria-label="Signal Vector Labs home"><span class="sv-mark" aria-hidden="true">SV</span><span>Signal Vector Labs<small>CONNECTED SYSTEMS, DESIGNED</small></span></a>
+          <p class="footer-about">{companySummary} We plan the network, connections and custom behavior around how your home or business works.</p>
+        </div>
+        <div class="footer-col"><h3>Explore</h3><a href="/services">All solutions</a><a href="/services/network-design">Network design</a><a href="/services/custom-automation">Custom automation</a><a href="/plan">Plan a walkthrough</a></div>
+        <div class="footer-col"><h3>Talk with our team</h3><p>Choose an on-site walkthrough or a guided call with a visual demo.</p><a href={`mailto:${config.email}?subject=${encodeURIComponent('Signal Vector Labs walkthrough')}`}>{config.email}</a><a href={`tel:${config.telephone}`}>{phoneDisplay}</a></div>
+      </div>
+      <div class="page-wrap footer-bottom"><span>© {new Date().getFullYear()} Signal Vector Labs</span><span>Independent integration services. UniFi and Ubiquiti are trademarks of their respective owners.</span></div>
+    </footer>
+  </body>
+</html>

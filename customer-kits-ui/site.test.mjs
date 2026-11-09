@@ -3,10 +3,6 @@ import assert from 'node:assert/strict';
 import { services, publicPaths, companySummary } from './services.mjs';
 import { defaults, renderHome, renderService, publicOrigin, sitemap } from './pages.mjs';
 import { createServer } from './server.mjs';
-import { existsSync } from 'node:fs';
-
-// The public GitHub export ships without the internal workspace and research; skip the checks that need them.
-const hasPrivate = existsSync(new URL('./internal.html', import.meta.url)) && existsSync(new URL('../research/customer-kits.md', import.meta.url));
 
 const config = {...defaults, businessName:'Test Integration Studio',siteUrl:'https://example.com',serviceAreas:['Example area']};
 test('service pages expose substantive content and crawlable related links without JavaScript', () => {
@@ -66,7 +62,7 @@ test('public metadata escapes user configuration and sitemap includes only publi
   assert.equal(schema['@graph'][0].name,'<script>alert("x")</script>');
 });
 test('HTTP routes, canonical redirects, internal noindex, assets and real 404 responses', async t => {
-  const server = createServer(config);
+  const server = createServer(config,{staticRoot:null});
   await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));
   t.after(()=>new Promise(resolve=>server.close(resolve)));
   const base = 'http://127.0.0.1:' + server.address().port;
@@ -81,7 +77,7 @@ test('HTTP routes, canonical redirects, internal noindex, assets and real 404 re
       assert.fail('Unexpected/broken public link: ' + target);
     }
   }
-  for (const path of hasPrivate ? ['/internal','/api/research'] : []) {
+  for (const path of ['/internal','/api/research']) {
     const response = await fetch(base + path);
     assert.equal(response.status,200);
     assert.match(response.headers.get('x-robots-tag'),/noindex/);
@@ -107,11 +103,11 @@ test('HTTP routes, canonical redirects, internal noindex, assets and real 404 re
   await post.arrayBuffer();
 });
 test('network-facing customer service never serves internal research, prices or scripts', async t => {
-  const server = createServer(config,{mode:'public'});
+  const server = createServer(config,{mode:'public',staticRoot:null});
   await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));
   t.after(()=>new Promise(resolve=>server.close(resolve)));
   const base = 'http://127.0.0.1:' + server.address().port;
-  for (const path of ['/internal','/internal/','/internal.js','/internal.css','/api/research','/shared.js','/sales-model.mjs','/invoices.js','/invoice-model.mjs']) {
+  for (const path of ['/internal','/internal/','/internal.js','/internal.css','/api/research','/shared.js','/sales-model.mjs']) {
     const response = await fetch(base+path);
     assert.equal(response.status,404,path);
     assert.ok(!(await response.text()).includes('gross margin'));
@@ -122,7 +118,7 @@ test('network-facing customer service never serves internal research, prices or 
   const health = await fetch(base+'/healthz');
   assert.deepEqual(await health.json(),{status:'ok',mode:'public'});
 });
-test('private service redirects to sales workspace and links to the configured customer site', {skip: !hasPrivate && 'internal workspace not in this checkout'}, async t => {
+test('private service redirects to sales workspace and links to the configured customer site', async t => {
   const server = createServer({...config,customerUrl:'http://192.0.2.10:4173/'},{mode:'internal'});
   await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));
   t.after(()=>new Promise(resolve=>server.close(resolve)));

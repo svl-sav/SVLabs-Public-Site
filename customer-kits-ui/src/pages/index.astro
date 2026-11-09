@@ -1,0 +1,66 @@
+---
+import SiteLayout from '../components/SiteLayout.astro';
+import InteractiveDemo from '../components/InteractiveDemo.jsx';
+import { services } from '../../services.mjs';
+const title = 'Home & Business Integration | UniFi, AV & Automation';
+const description = 'Signal Vector Labs designs UniFi networks, access and camera integrations, AV, business systems and custom automations for homes and businesses.';
+const systems = [
+  ['01','Network design','Wi-Fi, switching, device roles and business network design.','⌁','/services/network-design'],
+  ['02','Access & cameras','Visitor entry, camera coverage and useful event responses.','◉','/services/access-control-security'],
+  ['03','Audio, video & lighting','Coordinated sound, screens, displays and room scenes.','◖','/services/av-lighting'],
+  ['04','Custom automation','Routines and advanced logic built around how you operate.','↗','/services/custom-automation'],
+];
+const steps = [
+  ['01','Walk the space','Show us how you use the home or business, what already works and where a connection could help.'],
+  ['02','Map the systems','We identify the trigger, the conditions, the response and the equipment or interfaces the design depends on.'],
+  ['03','See the workflow','Review a visual walkthrough of the proposed experience, including controls, edge cases and manual overrides.'],
+  ['04','Scope the project','Agree what is included, what needs verification and how the implementation will be demonstrated.'],
+];
+---
+<SiteLayout title={title} description={description} path="/">
+  <main id="main">
+    <section class="hero-shell" id="experience">
+      <div class="page-wrap hero-grid">
+        <div class="hero-copy">
+          <p class="eyebrow">UNIFI · NETWORKS · AV · AUTOMATION</p>
+          <h1 class="hero-title">Make your systems work <span>together.</span></h1>
+          <p class="hero-lede">Signal Vector Labs designs connected experiences for homes and businesses—from the network foundation to the custom workflow that makes the whole space feel considered.</p>
+          <div class="hero-actions"><a class="btn btn-primary" href="/services">Explore solutions <span aria-hidden="true">→</span></a><a class="btn btn-white" href="/plan">Plan a walkthrough</a></div>
+          <div class="hero-points"><span><i class="check-dot">✓</i> Home and business projects</span><span><i class="check-dot">✓</i> Designed around your equipment</span></div>
+        </div>
+        <InteractiveDemo client:load />
+      </div>
+    </section>
+
+    <section class="page-wrap section-pad" aria-labelledby="systems-heading">
+      <div class="section-heading"><div><p class="eyebrow">ONE PLAN. THE WHOLE EXPERIENCE.</p><h2 class="section-title" id="systems-heading">The systems we bring into the conversation.</h2></div><p class="section-copy">Start with one frustrating moment or a full project. We look at the network, physical systems, rooms and team workflows that shape the outcome.</p></div>
+      <div class="system-grid">
+        {systems.map(([number, name, detail, icon, href]) => <a class="system-card group" href={href}>
+          <span class="flex items-center justify-between"><span class="system-icon text-2xl" aria-hidden="true">{icon}</span><small class="text-xs font-extrabold tracking-widest text-slate-400">{number}</small></span>
+          <h3>{name}</h3><p>{detail}</p><span class="mt-4 inline-flex items-center gap-2 text-sm font-bold text-blue">See what we can design <span aria-hidden="true">→</span></span>
+        </a>)}
+      </div>
+      <div class="mt-5 flex flex-wrap gap-x-5 gap-y-2 rounded-xl bg-paper px-5 py-4 text-sm text-slate-600"><strong class="text-ink">Also in scope:</strong><span>Business software and system integrations</span><span>Personalized sound and image experiences</span><span>Simple through advanced automation</span></div>
+    </section>
+
+    <section class="band-dark section-pad" id="approach">
+      <div class="page-wrap">
+        <div class="section-heading"><div><p class="eyebrow">FROM AN IDEA TO A WORKING PLAN</p><h2 class="section-title">A clear path from “what if?” to what happens next.</h2></div><p class="section-copy">We keep the conversation grounded in your actual space, the systems you use and the experience you want people to have.</p></div>
+        <div class="process-grid">{steps.map(([number, name, detail]) => <article class="process-card"><span class="process-number">{number} / PROJECT STEP</span><h3>{name}</h3><p>{detail}</p></article>)}</div>
+      </div>
+    </section>
+
+    <section class="page-wrap section-pad" aria-labelledby="solutions-heading">
+      <div class="section-heading"><div><p class="eyebrow">SOLUTIONS FOR REAL SPACES</p><h2 class="section-title" id="solutions-heading">What would you like to improve?</h2></div><a class="hidden shrink-0 font-bold text-blue md:inline-flex" href="/services">View all services →</a></div>
+      <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">{services.slice(0, 6).map((service) => <a class="solution-card" href={`/services/${service.slug}`}>
+        <div class="card-top"><span class="system-icon text-xl" aria-hidden="true">{service.icon === 'home' ? '⌂' : service.icon === 'access' ? '◉' : service.icon === 'av' ? '◖' : service.icon === 'network' ? '⌁' : service.icon === 'business' ? '▦' : '↗'}</span><span class="audience">{service.audience.map((item) => item === 'home' ? 'Home' : 'Business').join(' + ')}</span></div>
+        <h3>{service.title}</h3><p>{service.short}</p><span class="card-link">Explore this solution <span aria-hidden="true">→</span></span>
+      </a>)}</div>
+      <div class="mt-7 md:hidden"><a class="btn btn-white w-full" href="/services">Browse all solutions <span aria-hidden="true">→</span></a></div>
+    </section>
+
+    <section class="page-wrap pb-20">
+      <div class="cta-panel"><div><p class="eyebrow">LET’S START WITH YOUR SPACE</p><h2>Walk us through the idea. We’ll help shape the next step.</h2><p>Choose an in-person site walkthrough or a guided call with a visual demo. Bring your questions, existing systems and the outcome you want.</p></div><a class="btn btn-primary shrink-0" href="/plan">Plan your conversation <span aria-hidden="true">→</span></a></div>
+    </section>
+  </main>
+</SiteLayout>

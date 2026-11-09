@@ -74,4 +74,7 @@ em{font-family:inherit;font-style:normal;font-weight:600;color:var(--accent)}
 .brief-summary{background:#eef3fa}
 .choice input:checked+span{background:#eaf1ff;border-color:#7499e8}
 .text-link{border-bottom-color:#9bb7ee}
+.brand-mark{font:600 11px/1 'Segoe UI',Arial,sans-serif;letter-spacing:-.35px;display:grid;place-items:center}
+.footer-contact{display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:12px;font-size:12px}
+.footer-contact a{color:var(--accent);text-underline-offset:4px;text-decoration:underline}
 @media(max-width:520px){.service-card h3{font-size:24px}.service-promise{font-size:20px}.demo-result h2{font-size:20px}}

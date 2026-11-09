@@ -1,0 +1,16 @@
+---
+import SiteLayout from '../components/SiteLayout.astro';
+import WalkthroughPlanner from '../components/WalkthroughPlanner.jsx';
+import config from '../../site-config.json';
+const title = 'Plan a Site Walkthrough or Visual Demo';
+const description = 'Prepare a walkthrough request with Signal Vector Labs. Choose an on-site visit or guided call and describe your network, AV, access or automation goals.';
+const phoneDigits = config.telephone.replace(/\D/g, '').replace(/^1(?=\d{10}$)/, '');
+const phoneDisplay = phoneDigits.length === 10 ? `${phoneDigits.slice(0, 3)}-${phoneDigits.slice(3, 6)}-${phoneDigits.slice(6)}` : config.telephone;
+---
+<SiteLayout title={title} description={description} path="/plan">
+  <main id="main">
+    <section class="page-hero"><div class="page-wrap"><p class="eyebrow">START A PROJECT CONVERSATION</p><h1>Bring the idea. We’ll help map the details.</h1><p>Share what kind of space you have and what you’d like it to do. Pick an on-site walkthrough or a guided call with a visual demo.</p></div></section>
+    <section class="page-wrap section-pad"><WalkthroughPlanner client:load email={config.email} /></section>
+    <section class="page-wrap pb-20"><div class="rounded-xl border border-slate-200 bg-slate-50 p-6 md:flex md:items-center md:justify-between md:gap-8"><div><p class="eyebrow">PREFER TO TALK FIRST?</p><h2 class="mt-2 text-2xl font-bold">Contact Signal Vector Labs directly.</h2><p class="mt-2 text-slate-600">We can start with your space, the systems already in place and the outcome you want.</p></div><div class="mt-5 flex flex-wrap gap-3 md:mt-0"><a class="btn btn-white" href={`mailto:${config.email}`}>Email us</a><a class="btn btn-white" href={`tel:${config.telephone}`}>Call {phoneDisplay}</a></div></div></section>
+  </main>
+</SiteLayout>
