@@ -11,10 +11,9 @@ const systems = [
   ['04','Custom automation','Routines and advanced logic built around how you operate.','↗','/services/custom-automation'],
 ];
 const steps = [
-  ['01','Walk the space','Show us how you use the home or business, what already works and where a connection could help.'],
-  ['02','Map the systems','We identify the trigger, the conditions, the response and the equipment or interfaces the design depends on.'],
-  ['03','See the workflow','Review a visual walkthrough of the proposed experience, including controls, edge cases and manual overrides.'],
-  ['04','Scope the project','Agree what is included, what needs verification and how the implementation will be demonstrated.'],
+  ['01','Start with the moment','Walk us through the space, on site or on a call. Start with the routine, frustration or experience you want to change.','WALKTHROUGH OUTPUT','A clear goal and priorities'],
+  ['02','Map every connection','We trace what starts the event, what needs to be checked and which network, access, AV, lighting or business systems should respond.','DESIGN OUTPUT','A visual integration map'],
+  ['03','See it before we build','Review the sequence, manual controls, exceptions and the equipment details that need confirming before the scope is agreed.','REVIEW OUTPUT','A plan everyone can understand'],
 ];
 ---
 <SiteLayout title={title} description={description} path="/">
@@ -45,8 +44,13 @@ const steps = [
 
     <section class="band-dark section-pad" id="approach">
       <div class="page-wrap">
-        <div class="section-heading"><div><p class="eyebrow">FROM AN IDEA TO A WORKING PLAN</p><h2 class="section-title">A clear path from “what if?” to what happens next.</h2></div><p class="section-copy">We keep the conversation grounded in your actual space, the systems you use and the experience you want people to have.</p></div>
-        <div class="process-grid">{steps.map(([number, name, detail]) => <article class="process-card"><span class="process-number">{number} / PROJECT STEP</span><h3>{name}</h3><p>{detail}</p></article>)}</div>
+        <div class="section-heading"><div><p class="eyebrow">A WALKTHROUGH YOU CAN FOLLOW</p><h2 class="section-title">See how the pieces connect before work begins.</h2></div><p class="section-copy">Meet on site or by video. We’ll turn the idea into a visual sequence, explain what each system does and make the next decision clear.</p></div>
+        <div class="process-grid">{steps.map(([number, name, detail, outputLabel, output]) => <article class="process-card">
+          <span class="process-number">{number}<span> / YOUR WALKTHROUGH</span></span>
+          <h3>{name}</h3><p>{detail}</p>
+          <div class="process-output"><small>{outputLabel}</small><strong>{output}</strong></div>
+        </article>)}</div>
+        <div class="process-example"><div><small>EXAMPLE FLOW</small><p>Visitor arrives <span>→</span> entry event checked <span>→</span> camera view sent to host <span>→</span> welcome scene begins</p></div><a href="/plan">Choose an on-site walkthrough or guided visual demo <span aria-hidden="true">→</span></a></div>
       </div>
     </section>
 

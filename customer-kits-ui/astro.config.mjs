@@ -7,6 +7,7 @@ export default defineConfig({
   site: config.siteUrl || 'https://signalvectorlabs.com',
   output: 'static',
   trailingSlash: 'never',
+  devToolbar: { enabled: false },
   integrations: [react()],
   vite: { plugins: [tailwindcss()] },
 });
