@@ -1,6 +1,6 @@
-# Connected Spaces — customer site
+# Signal Vector Labs — website
 
-The public website for Connected Spaces: UniFi network design and custom home and business automation (entry, cameras, Wi-Fi, sound, screens and lighting).
+The public website for Signal Vector Labs: UniFi network design and custom home and business automation (entry, cameras, Wi-Fi, sound, screens and lighting).
 
 Plain Node.js, no dependencies.
 

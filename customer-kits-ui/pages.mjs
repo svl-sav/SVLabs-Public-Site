@@ -1,14 +1,14 @@
 import { readFileSync } from 'node:fs';
 import { services, publicPaths, companySummary } from './services.mjs';
 import { icon, room } from './visuals.mjs';
-export const defaults = { businessName: 'Connected Spaces', siteUrl: '', serviceAreas: [], email: '', telephone: '' };
+export const defaults = { businessName: 'Signal Vector Labs', siteUrl: '', serviceAreas: [], email: '', telephone: '' };
 export const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const json = value => JSON.stringify(value).replace(/</g, '\\u003c');
 export function publicOrigin(value) {
   if (!value) return '';
   try { const u = new URL(value); return /^https?:$/.test(u.protocol) && !u.username && !u.password && !['localhost','127.0.0.1','[::1]'].includes(u.hostname) ? u.origin : ''; } catch { return ''; }
 }
-function brand(config) { return '<a class="brand" href="/" aria-label="' + esc(config.businessName) + ' home"><span class="brand-mark" aria-hidden="true">c<span>·</span></span><span>' + esc(config.businessName) + '</span></a>'; }
+function brand(config) { return '<a class="brand" href="/" aria-label="' + esc(config.businessName) + ' home"><span class="brand-mark" aria-hidden="true">SV</span><span>' + esc(config.businessName) + '</span></a>'; }
 function footer(config) {
   return '<footer class="site-footer"><div>' + brand(config) + '<p class="company-summary">' + esc(companySummary) + '</p></div><div class="footer-links"><a href="/services">Explore services</a><a href="/plan">Plan a walkthrough</a><a href="/#approach">How we work</a></div>' +
     (config.serviceAreas.length ? '<p class="area">Serving ' + esc(config.serviceAreas.join(', ')) + '</p>' : '') +

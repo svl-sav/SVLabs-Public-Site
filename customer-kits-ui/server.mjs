@@ -76,7 +76,7 @@ if (process.argv[1] && pathToFileURL(resolve(process.argv[1])).href === import.m
     console.error(error.code === 'EADDRINUSE' ? 'Port ' + port + ' is already in use. Stop the existing preview or set a different PORT.' : error);
     process.exitCode = 1;
   });
-  server.listen(port,host,() => console.log('Connected Spaces (' + mode + '): http://' + host + ':' + port));
+  server.listen(port,host,() => console.log('Signal Vector Labs (' + mode + '): http://' + host + ':' + port));
   const shutdown = () => {
     server.close(()=>process.exit(0));
     setTimeout(()=>process.exit(1),10000).unref();
